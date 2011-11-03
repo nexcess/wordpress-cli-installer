@@ -5,7 +5,8 @@
  */
 
 /**
- *
+ * Simple message logging helper
+ * 
  * @param string $message
  */
 function _wpi_log( $message ) {
@@ -13,7 +14,8 @@ function _wpi_log( $message ) {
 }
 
 /**
- *
+ * Log debug messages (hidden without the -v option)
+ * 
  * @param string $message
  */
 function _wpi_debug( $message ) {
@@ -23,6 +25,7 @@ function _wpi_debug( $message ) {
 }
 
 /**
+ * Die with an error message + optional exit code
  *
  * @param string $message
  * @param int $code 
@@ -33,7 +36,7 @@ function _wpi_die( $message, $code = 1 ) {
 }
 
 /**
- * Print usage information and die
+ * Print usage information and die (2)
  */
 function _wpi_usage() {
     printf( 'Usage: %1$s [-hPv] -b base-url -e email-address [-p admin-password]
@@ -82,6 +85,12 @@ wp-config options:
     exit( 2 );
 }
 
+/**
+ * Generate a random alphanumeric string
+ *
+ * @param int $length
+ * @return string
+ */
 function _wpi_random_string( $length = 12 ) {
     $validChars = array_merge(
         range( 'a', 'z' ),
@@ -111,7 +120,6 @@ function _wpi_do_wp_install( $blogTitle, $adminUsername, $adminPassword,
                         $adminEmail, $blogIsPublic ) {
     _wpi_debug( 'Running installer' );
     $deprecated = null;
-    return;
     define( 'WP_INSTALLING', true );
     require_once 'wp-load.php';
     require_once 'wp-admin/includes/upgrade.php';
@@ -121,6 +129,7 @@ function _wpi_do_wp_install( $blogTitle, $adminUsername, $adminPassword,
 }
 
 /**
+ * Create a wp-config.php file, will overwrite an existing one
  *
  * @param string $dbName
  * @param string $dbUser
@@ -171,6 +180,7 @@ require_once(ABSPATH . \'wp-settings.php\');' . PHP_EOL );
 }
 
 /**
+ * Parse the options or print the usage text if parsing failed
  *
  * @param array $result
  * @return array 
@@ -196,7 +206,6 @@ function _wpi_clean_opts( $result ) {
             $parsed['path'] = realpath( $args[0] );
             if( is_dir( $parsed['path'] ) ) {
                 //parse the rest
-                var_dump( $opts );
                 foreach( $opts as $opt ) {
                     switch( $opt[0] ) {
                         case 'b':
@@ -248,6 +257,7 @@ function _wpi_clean_opts( $result ) {
 }
 
 /**
+ * Do stuff
  *
  * @param int $argc
  * @param array $argv
@@ -276,12 +286,18 @@ function main( $argc, $argv ) {
     }
     _wpi_do_wp_install( $parsed['title'], $parsed['user'], $parsed['pass'],
         $parsed['email'], $parsed['public'] );
-    printf( 'Login:    %1$s
-Username: %2$s
-Password: %3$s' . PHP_EOL,
+    printf( 'Blog URL:  %4$s
+Admin URL: %1$s
+Username:  %2$s
+Password:  %3$s' . PHP_EOL,
         WP_SITEURL . '/wp-admin/', $parsed['user'],
-        $parsed['pass'] );
-    exit( 0 );
+        $parsed['pass'], WP_SITEURL . '/' );
+    //there are die() calls in the wp_install routine so we can't be sure that
+    // we installed correctly unless we use some weird return value (bad installs
+    // will exit 0 if it was in wp_install and 1-$something_low if it was in this
+    // script, then we exit 128 if successful
+    exit( 128 );
+    
 }
 
 //GO GO GO
