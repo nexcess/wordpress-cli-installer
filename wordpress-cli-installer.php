@@ -139,6 +139,9 @@ function _wpi_do_wp_install( $blogTitle, $adminUsername, $adminPassword,
  */
 function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $lang = '' ) {
     _wpi_debug( 'Creating wp-config.php' );
+    if( is_null( $dbName ) || is_null( $dbUser ) || is_null( $dbPass ) ) {
+        _wpi_die( 'Database name, user and password are required to create the wp-config.php file', 9 );
+    }
     if( $fp = fopen( 'wp-config.php', 'w' ) ) {
         fwrite( $fp, '<?php' . PHP_EOL );
         //configurable database stuff
@@ -251,6 +254,12 @@ function _wpi_clean_opts( $result ) {
                 if( !defined( '_WPI_VERBOSE' ) ) {
                     define( '_WPI_VERBOSE', false );
                 }
+                if( !defined( 'WP_SITEURL' ) ) {
+                    _wpi_die( '-b option is required', 8 );
+                }
+                if( is_null( $parsed['email'] ) ) {
+                    _wpi_die( '-e option is required', 8 );
+                }
                 _wpi_debug( 'Read options: ' . print_r( $parsed, true ) );
                 return $parsed;
             } else {
@@ -273,12 +282,12 @@ function main( $argc, $argv ) {
     array_shift( $argv );
     $argc--;
 
-    $shortOptions = 'b:e:hp::PT::u::v';
+    $shortOptions = 'b:e:hp:PT:u:v';
     $longOptions = array(
-        'dbuser==',
-        'dbpass==',
-        'dbname==',
-        'dbhost==',
+        'dbuser=',
+        'dbpass=',
+        'dbname=',
+        'dbhost=',
     );
 
     require_once 'Console/Getopt.php';
