@@ -1,7 +1,26 @@
 <?php
 
 /**
- * license stuff goes here, GPLv2
+ * Nexcess.net Wordpress CLI Installer
+ * Copyright (C) 2011  Nexcess.net L.L.C.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+/**
+ * @author Alex Headley <aheadley@nexcess.net>
  */
 
 /**
@@ -39,7 +58,7 @@ function _wpi_die( $message, $code = 1 ) {
  * Print usage information and die (2)
  */
 function _wpi_usage() {
-    printf( 'Usage: %1$s [-hPv] -b base-url -e email-address [-p admin-password]
+    print 'Usage: wordpress-cli-installer.sh [-hPv] -b base-url -e email-address [-p admin-password]
     [-T blog-title] [-u admin-user] [--dbuser=database-user] [--dbpass=database-pass]
     [--dbname=database-name] [--dbhost=database-host] path/to/wp/files/
 
@@ -80,8 +99,7 @@ wp-config options:
     --dbhost=<database-host>
         Database hostname. Passing host:port or /path/to/socket.sock might also
         work
-        default: localhost'. PHP_EOL,
-            basename( __FILE__ ) );
+        default: localhost'. PHP_EOL;
     exit( 2 );
 }
 
