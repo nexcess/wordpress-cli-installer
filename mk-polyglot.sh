@@ -11,4 +11,4 @@ cat > $SHELL_SCRIPT <<EOF
 php $PHP_OPTIONS -- \$* <<EOF
 EOF
 
-cat $PHP_SCRIPT | sed 's/\$/\\$/g' >> $SHELL_SCRIPT
+php -w $PHP_SCRIPT | sed 's/\$/\\$/g' >> $SHELL_SCRIPT
