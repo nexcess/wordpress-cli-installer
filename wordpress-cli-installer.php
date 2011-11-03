@@ -107,28 +107,6 @@ function _wpi_random_string( $length = 12 ) {
 }
 
 /**
- * Run the Wordpress install routine
- *
- * @param string $blogTitle
- * @param string $adminUsername
- * @param string $adminPassword
- * @param string $adminEmail
- * @param bool $blogIsPublic
- * @return array
- */
-function _wpi_do_wp_install( $blogTitle, $adminUsername, $adminPassword,
-                        $adminEmail, $blogIsPublic ) {
-    _wpi_debug( 'Running installer' );
-    $deprecated = null;
-    define( 'WP_INSTALLING', true );
-    require_once 'wp-load.php';
-    require_once 'wp-admin/includes/upgrade.php';
-    require_once 'wp-includes/wp-db.php';
-    return wp_install( $blogTitle, $adminUsername, $adminEmail, $blogIsPublic,
-        $deprecated, $adminPassword);
-}
-
-/**
  * Create a wp-config.php file, will overwrite an existing one
  *
  * @param string $dbName
@@ -216,6 +194,7 @@ function _wpi_clean_opts( $result ) {
                             //  which avoids a few issues
                             if( !defined( 'WP_SITEURL' ) ) {
                                 define( 'WP_SITEURL', rtrim( $opt[1], '/' ) );
+                                $parsed['baseurl'] = WP_SITEURL;
                             } else {
                                 _wpi_debug( 'WP_SITEURL already defined, skipping another baseurl' );
                             }
@@ -271,49 +250,43 @@ function _wpi_clean_opts( $result ) {
     }
 }
 
-/**
- * Do stuff
- *
- * @param int $argc
- * @param array $argv
- */
-function main( $argc, $argv ) {
-    // remove crap we don't care about
-    array_shift( $argv );
-    $argc--;
+// remove crap we don't care about
+array_shift( $argv );
+$argc--;
 
-    $shortOptions = 'b:e:hp:PT:u:v';
-    $longOptions = array(
-        'dbuser=',
-        'dbpass=',
-        'dbname=',
-        'dbhost=',
-    );
+$shortOptions = 'b:e:hp:PT:u:v';
+$longOptions = array(
+    'dbuser=',
+    'dbpass=',
+    'dbname=',
+    'dbhost=',
+);
 
-    require_once 'Console/Getopt.php';
-    $reader = new Console_Getopt;
-    $parsed = _wpi_clean_opts( $reader->getopt( $argv, $shortOptions, $longOptions ) );
-    _wpi_debug( 'Moving to path: ' . $parsed['path'] );
-    chdir( $parsed['path'] );
-    if( !is_readable( 'wp-config.php' ) ) {
-        _wpi_create_wp_config( $parsed['dbname'], $parsed['dbuser'],
-            $parsed['dbpass'], $parsed['dbhost'] );
-    }
-    _wpi_do_wp_install( $parsed['title'], $parsed['user'], $parsed['pass'],
-        $parsed['email'], $parsed['public'] );
-    printf( 'Blog URL:  %4$s
+require_once 'Console/Getopt.php';
+$reader = new Console_Getopt;
+$parsed = _wpi_clean_opts( $reader->getopt( $argv, $shortOptions, $longOptions ) );
+_wpi_debug( 'Moving to path: ' . $parsed['path'] );
+chdir( $parsed['path'] );
+if( !is_readable( 'wp-config.php' ) ) {
+    _wpi_create_wp_config( $parsed['dbname'], $parsed['dbuser'],
+        $parsed['dbpass'], $parsed['dbhost'] );
+}
+_wpi_debug( 'Running installer' );
+$deprecated = null;
+define( 'WP_INSTALLING', true );
+require_once 'wp-load.php';
+require_once 'wp-admin/includes/upgrade.php';
+require_once 'wp-includes/wp-db.php';
+wp_install( $parsed['title'], $parsed['user'], $parsed['email'],
+    $parsed['public'], $deprecated, $parsed['pass'] );
+printf( 'Blog URL:  %4$s
 Admin URL: %1$s
 Username:  %2$s
 Password:  %3$s' . PHP_EOL,
-        WP_SITEURL . '/wp-admin/', $parsed['user'],
-        $parsed['pass'], WP_SITEURL . '/' );
-    //there are die() calls in the wp_install routine so we can't be sure that
-    // we installed correctly unless we use some weird return value (bad installs
-    // will exit 0 if it was in wp_install and 1-$something_low if it was in this
-    // script, then we exit 128 if successful
-    exit( 128 );
-    
-}
-
-//GO GO GO
-main( $argc, $argv );
+    WP_SITEURL . '/wp-admin/', $parsed['user'],
+    $parsed['pass'], WP_SITEURL . '/' );
+//there are die() calls in the wp_install routine so we can't be sure that
+// we installed correctly unless we use some weird return value (bad installs
+// will exit 0 if it was in wp_install and 1-$something_low if it was in this
+// script, then we exit 128 if successful
+exit( 128 );
