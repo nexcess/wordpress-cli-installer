@@ -12,3 +12,6 @@ php $PHP_OPTIONS -- \$* <<EOF
 EOF
 
 php -w $PHP_SCRIPT | sed 's/\$/\\$/g' >> $SHELL_SCRIPT
+
+echo >> $SHELL_SCRIPT
+echo 'EOF' >> $SHELL_SCRIPT
