@@ -187,7 +187,7 @@ require_once(ABSPATH . \'wp-settings.php\');' . PHP_EOL );
  */
 function _wpi_clean_opts( $result ) {
     if( !is_array( $result ) ) {
-        _wpi_usage();
+        _wpi_die( 'Failed parsing options: ' . $result->getMessage(), 6 );
     } else {
         list( $opts, $args ) = $result;
         $parsed = array(
@@ -211,7 +211,11 @@ function _wpi_clean_opts( $result ) {
                         case 'b':
                             //if we define this here, wp_guess_url will use it
                             //  which avoids a few issues
-                            define( 'WP_SITEURL', rtrim( $opt[1], '/' ) );
+                            if( !defined( 'WP_SITEURL' ) ) {
+                                define( 'WP_SITEURL', rtrim( $opt[1], '/' ) );
+                            } else {
+                                _wpi_debug( 'WP_SITEURL already defined, skipping another baseurl' );
+                            }
                             break;
                         case 'e':
                             $parsed['email'] = $opt[1];
@@ -231,7 +235,9 @@ function _wpi_clean_opts( $result ) {
                             $parsed['user'] = $opt[1];
                             break;
                         case 'v':
-                            define( '_WPI_VERBOSE', true );
+                            if( !defined( '_WPI_VERBOSE' ) ) {
+                                define( '_WPI_VERBOSE', true );
+                            }
                             break;
                         default:
                             if( strstr( $opt[0], '--' ) !== false ) {
@@ -251,7 +257,7 @@ function _wpi_clean_opts( $result ) {
                 _wpi_die( 'Path is not a directory: ' . $parsed['path'], 4 );
             }
         } else {
-            _wpi_usage();
+            _wpi_die( 'Incorrect arg count: ' . count( $args ), 4 );
         }
     }
 }
