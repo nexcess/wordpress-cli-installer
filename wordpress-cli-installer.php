@@ -183,62 +183,62 @@ function _wpi_clean_opts( $result ) {
             'dbname'    => null,
             'dbhost'    => 'localhost',
         );
+        foreach( $opts as $opt ) {
+            switch( $opt[0] ) {
+                case 'b':
+                    //if we define this here, wp_guess_url will use it
+                    //  which avoids a few issues
+                    if( !defined( 'WP_SITEURL' ) ) {
+                        define( 'WP_SITEURL', rtrim( $opt[1], '/' ) );
+                        $parsed['baseurl'] = WP_SITEURL;
+                    } else {
+                        _wpi_debug( 'WP_SITEURL already defined, skipping another baseurl' );
+                    }
+                    break;
+                case 'e':
+                    $parsed['email'] = $opt[1];
+                    break;
+                case 'h':
+                    _wpi_usage();
+                case 'p':
+                    $parsed['pass'] = $opt[1];
+                    break;
+                case 'P':
+                    $parsed['public'] = false;
+                    break;
+                case 'T':
+                    $parsed['title'] = $opt[1];
+                    break;
+                case 'u':
+                    $parsed['user'] = $opt[1];
+                    break;
+                case 'v':
+                    if( !defined( '_WPI_VERBOSE' ) ) {
+                        define( '_WPI_VERBOSE', true );
+                    }
+                    break;
+                default:
+                    if( strstr( $opt[0], '--' ) !== false ) {
+                        $parsed[ltrim( $opt[0], '-' )] = $opt[1];
+                    } else {
+                        _wpi_die( 'Unrecognized option: ' . $opt[1], 5 );
+                    }
+                    break;
+            }
+        }
+        if( !defined( '_WPI_VERBOSE' ) ) {
+            define( '_WPI_VERBOSE', false );
+        }
+        if( !defined( 'WP_SITEURL' ) ) {
+            _wpi_die( '-b option is required', 8 );
+        }
+        if( is_null( $parsed['email'] ) ) {
+            _wpi_die( '-e option is required', 8 );
+        }
         if( count( $args ) === 1 ) {
             $parsed['path'] = realpath( $args[0] );
             if( is_dir( $parsed['path'] ) ) {
                 //parse the rest
-                foreach( $opts as $opt ) {
-                    switch( $opt[0] ) {
-                        case 'b':
-                            //if we define this here, wp_guess_url will use it
-                            //  which avoids a few issues
-                            if( !defined( 'WP_SITEURL' ) ) {
-                                define( 'WP_SITEURL', rtrim( $opt[1], '/' ) );
-                                $parsed['baseurl'] = WP_SITEURL;
-                            } else {
-                                _wpi_debug( 'WP_SITEURL already defined, skipping another baseurl' );
-                            }
-                            break;
-                        case 'e':
-                            $parsed['email'] = $opt[1];
-                            break;
-                        case 'h':
-                            _wpi_usage();
-                        case 'p':
-                            $parsed['pass'] = $opt[1];
-                            break;
-                        case 'P':
-                            $parsed['public'] = false;
-                            break;
-                        case 'T':
-                            $parsed['title'] = $opt[1];
-                            break;
-                        case 'u':
-                            $parsed['user'] = $opt[1];
-                            break;
-                        case 'v':
-                            if( !defined( '_WPI_VERBOSE' ) ) {
-                                define( '_WPI_VERBOSE', true );
-                            }
-                            break;
-                        default:
-                            if( strstr( $opt[0], '--' ) !== false ) {
-                                $parsed[ltrim( $opt[0], '-' )] = $opt[1];
-                            } else {
-                                _wpi_die( 'Unrecognized option: ' . $opt[1], 5 );
-                            }
-                            break;
-                    }
-                }
-                if( !defined( '_WPI_VERBOSE' ) ) {
-                    define( '_WPI_VERBOSE', false );
-                }
-                if( !defined( 'WP_SITEURL' ) ) {
-                    _wpi_die( '-b option is required', 8 );
-                }
-                if( is_null( $parsed['email'] ) ) {
-                    _wpi_die( '-e option is required', 8 );
-                }
                 _wpi_debug( 'Read options: ' . print_r( $parsed, true ) );
                 return $parsed;
             } else {
