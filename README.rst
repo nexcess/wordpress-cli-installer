@@ -12,7 +12,7 @@ can instead use the bash shell script which is generated (using mk-polyglot.sh) 
 the complete PHP script. Thus you can do something like this::
 
     $ curl -s http://wordpress.org/latest.tar.gz | tar xzf -  
-    $ wget -q https://raw.github.com/nexcess/wordpress-cli-installer/master/wordpress-cli-installer.sh && chmod +x wordpress-cli-installer.sh
+    $ wget -q http://goo.gl/OokgX && chmod +x wordpress-cli-installer.sh
     # edit wordpress/wp-config.php to change db settings, or add them to the next command
     $ ./wordpress-cli-installer.sh -T 'My New Blog' -e 'my-email@example.com' -b 'http://blog.example.com/' wordpress/
 
