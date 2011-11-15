@@ -78,6 +78,9 @@ General options:
     -P
         Toggle whether the blog is public or not (visible to search engines, etc)
         default: public (on)
+    -s
+        Toggle whether the blog requires an SSL connection for the admin section
+        default: off
     -T <blog-title>
         Set the blog\'s title, this should probably be short (and quoted)
         default: Change Me
@@ -133,7 +136,7 @@ function _wpi_random_string( $length = 12 ) {
  * @param string $dbHost
  * @param string $lang
  */
-function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $lang = '' ) {
+function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $secureAdmin ) {
     _wpi_debug( 'Creating wp-config.php' );
     if( is_null( $dbName ) || is_null( $dbUser ) || is_null( $dbPass ) ) {
         _wpi_die( 'Database name, user and password are required to create the wp-config.php file', 9 );
@@ -167,6 +170,9 @@ function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $lang = '' )
         //some more wp configs
         fprintf( $fp, 'define( \'%s\', \'%s\' );' . PHP_EOL, 'WP_LANG', $lang );
         fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'WP_DEBUG', 'false' );
+        if( $secureAdmin ) {
+            fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'FORCE_SSL_ADMIN', 'true' );
+        }
         //finish up
         fwrite( $fp, 'if ( !defined(\'ABSPATH\') )
     define(\'ABSPATH\', dirname(__FILE__) . \'/\');
@@ -195,6 +201,7 @@ function _wpi_clean_opts( $result ) {
             'pass'      => _wpi_random_string(),
             'public'    => true,
             'title'     => 'Change Me',
+            'secure'    => false,
             'user'      => 'admin',
             'dbuser'    => null,
             'dbpass'    => null,
@@ -226,6 +233,9 @@ function _wpi_clean_opts( $result ) {
                     break;
                 case 'T':
                     $parsed['title'] = $opt[1];
+                    break;
+                case 's':
+                    $parsed['secure'] = true;
                     break;
                 case 'u':
                     $parsed['user'] = $opt[1];
@@ -272,7 +282,7 @@ function _wpi_clean_opts( $result ) {
 array_shift( $argv );
 $argc--;
 
-$shortOptions = 'b:e:hp:PT:u:v';
+$shortOptions = 'b:e:hp:PT:su:v';
 $longOptions = array(
     'dbuser=',
     'dbpass=',
@@ -287,7 +297,7 @@ _wpi_debug( 'Moving to path: ' . $parsed['path'] );
 chdir( $parsed['path'] );
 if( !is_readable( 'wp-config.php' ) ) {
     _wpi_create_wp_config( $parsed['dbname'], $parsed['dbuser'],
-        $parsed['dbpass'], $parsed['dbhost'] );
+        $parsed['dbpass'], $parsed['dbhost'], $parsed['secure'] );
 }
 _wpi_debug( 'Running installer' );
 $deprecated = null;
