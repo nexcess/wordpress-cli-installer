@@ -168,7 +168,7 @@ function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $secureAdmin
                 _wpi_random_string( 32 ) );
         }
         //some more wp configs
-        fprintf( $fp, 'define( \'%s\', \'%s\' );' . PHP_EOL, 'WP_LANG', $lang );
+        fprintf( $fp, 'define( \'%s\', \'%s\' );' . PHP_EOL, 'WP_LANG', '' );
         fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'WP_DEBUG', 'false' );
         if( $secureAdmin ) {
             fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'FORCE_SSL_ADMIN', 'true' );
