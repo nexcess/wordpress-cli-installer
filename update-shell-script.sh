@@ -18,3 +18,12 @@ php -w $PHP_SCRIPT | sed 's/\$/\\$/g' >> $SHELL_SCRIPT
 
 echo >> $SHELL_SCRIPT
 echo 'EOF' >> $SHELL_SCRIPT
+cat >> $SHELL_SCRIPT <<EOF
+if [ \$? -eq 128 ]; then
+  exit 0
+elif [ \$? -eq 0 ]; then
+  exit 99
+else
+  exit \$?
+fi
+EOF

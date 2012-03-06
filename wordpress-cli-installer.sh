@@ -60,3 +60,10 @@ Admin URL: %1\$s
 Username:  %2\$s
 Password:  %3\$s' . PHP_EOL, WP_SITEURL . '/wp-admin/', \$parsed['user'], \$parsed['pass'], WP_SITEURL . '/' ); exit( 128 ); 
 EOF
+if [ $? -eq 128 ]; then
+  exit 0
+elif [ $? -eq 0 ]; then
+  exit 99
+else
+  exit $?
+fi
