@@ -289,7 +289,7 @@ function _wpi_clean_opts( $result ) {
 array_shift( $argv );
 $argc--;
 
-$shortOptions = 'b:e:hp:PT:su:v';
+$shortOptions = 'b:e:hp:PT:su:vl:';
 $longOptions = array(
     'dbuser=',
     'dbpass=',
