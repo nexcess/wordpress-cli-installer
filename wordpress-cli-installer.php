@@ -59,7 +59,7 @@ function _wpi_die( $message, $code = 1 ) {
  */
 function _wpi_usage() {
     print 'Usage: wordpress-cli-installer.sh [-hPv] -b base-url -e email-address [-p admin-password]
-    [-T blog-title] [-u admin-user] [--dbuser=database-user] [--dbpass=database-pass]
+    [-T blog-title] [-u admin-user] [-l lang] [--dbuser=database-user] [--dbpass=database-pass]
     [--dbname=database-name] [--dbhost=database-host] path/to/wp/files/
 
 General options:
@@ -87,6 +87,9 @@ General options:
     -u <admin-user>
         Admin user\'s username
         default: admin
+    -l <lang>
+        Language of this wordpress blog
+        default: <empty>
     -v
         Verbose flag, enable more output
 
@@ -168,7 +171,7 @@ function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $secureAdmin
                 _wpi_random_string( 32 ) );
         }
         //some more wp configs
-        fprintf( $fp, 'define( \'%s\', \'%s\' );' . PHP_EOL, 'WP_LANG', '' );
+        fprintf( $fp, 'define( \'%s\', \'%s\' );' . PHP_EOL, 'WP_LANG', $parsed['lang'] );
         fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'WP_DEBUG', 'false' );
         if( $secureAdmin ) {
             fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'FORCE_SSL_ADMIN', 'true' );
@@ -202,6 +205,7 @@ function _wpi_clean_opts( $result ) {
             'public'    => true,
             'title'     => 'Change Me',
             'secure'    => false,
+            'lang'      => '',
             'user'      => 'admin',
             'dbuser'    => null,
             'dbpass'    => null,
@@ -227,6 +231,9 @@ function _wpi_clean_opts( $result ) {
                     _wpi_usage();
                 case 'p':
                     $parsed['pass'] = $opt[1];
+                    break;
+                case 'l':
+                    $parsed['lang'] = $opt[1];
                     break;
                 case 'P':
                     $parsed['public'] = false;
