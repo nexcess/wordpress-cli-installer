@@ -44,7 +44,7 @@ General options:
         default: admin
     -l <lang>
         Language of this wordpress blog
-        default: <empty>
+        default: <empty> (en-US)
     -v
         Verbose flag, enable more output
 
@@ -69,9 +69,18 @@ Username:  %2\$s
 Password:  %3\$s' . PHP_EOL, WP_SITEURL . '/wp-admin/', \$parsed['user'], \$parsed['pass'], WP_SITEURL . '/' ); exit( 128 ); 
 EOF
 if [ $? -eq 128 ]; then
-  exit 0
+    #everything green
+    exit 0
+elif [ $? -eq 255 ]; then
+    #PHP internal error
+    exit 1
+elif [ $? -gt 128 ]; then
+    #wpi script error
+    exit 2
 elif [ $? -eq 0 ]; then
-  exit 99
+    #error from wp_install
+    exit 3
 else
-  exit $?
+    #dunno
+    exit 4
 fi
