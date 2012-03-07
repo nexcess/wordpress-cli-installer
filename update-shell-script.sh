@@ -28,10 +28,19 @@ echo >> $SHELL_SCRIPT
 echo 'EOF' >> $SHELL_SCRIPT
 cat >> $SHELL_SCRIPT <<EOF
 if [ \$? -eq 128 ]; then
-  exit 0
+    #everything green
+    exit 0
+elif [ \$? -eq 255 ]; then
+    #PHP internal error
+    exit 1
+elif [ \$? -gt 128 ]; then
+    #wpi script error
+    exit 2
 elif [ \$? -eq 0 ]; then
-  exit 99
+    #error from wp_install
+    exit 3
 else
-  exit \$?
+    #dunno
+    exit 4
 fi
 EOF
