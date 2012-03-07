@@ -8,12 +8,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -25,7 +25,7 @@
 
 /**
  * Simple message logging helper
- * 
+ *
  * @param string $message
  */
 function _wpi_log( $message ) {
@@ -34,7 +34,7 @@ function _wpi_log( $message ) {
 
 /**
  * Log debug messages (hidden without the -v option)
- * 
+ *
  * @param string $message
  */
 function _wpi_debug( $message ) {
@@ -47,7 +47,7 @@ function _wpi_debug( $message ) {
  * Die with an error message + optional exit code
  *
  * @param string $message
- * @param int $code 
+ * @param int $code
  */
 function _wpi_die( $message, $code = 1 ) {
     print 'ERROR: ' . rtrim( $message, PHP_EOL ) . PHP_EOL;
@@ -89,7 +89,7 @@ General options:
         default: admin
     -l <lang>
         Language of this wordpress blog
-        default: <empty>
+        default: <empty> (en-US)
     -v
         Verbose flag, enable more output
 
@@ -191,7 +191,7 @@ require_once(ABSPATH . \'wp-settings.php\');' . PHP_EOL );
  * Parse the options or print the usage text if parsing failed
  *
  * @param array $result
- * @return array 
+ * @return array
  */
 function _wpi_clean_opts( $result ) {
     if( !is_array( $result ) ) {
