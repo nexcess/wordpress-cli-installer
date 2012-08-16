@@ -1,4 +1,6 @@
 <?php
+// Surprise Deprecated and PHP Strict Messages
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
 /**
  * Nexcess.net Wordpress CLI Installer
@@ -139,7 +141,7 @@ function _wpi_random_string( $length = 12 ) {
  * @param string $dbHost
  * @param string $lang
  */
-function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $secureAdmin ) {
+function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $secureAdmin, $lang ) {
     _wpi_debug( 'Creating wp-config.php' );
     if( is_null( $dbName ) || is_null( $dbUser ) || is_null( $dbPass ) ) {
         _wpi_die( 'Database name, user and password are required to create the wp-config.php file', 9 );
@@ -171,7 +173,7 @@ function _wpi_create_wp_config( $dbName, $dbUser, $dbPass, $dbHost, $secureAdmin
                 _wpi_random_string( 32 ) );
         }
         //some more wp configs
-        fprintf( $fp, 'define( \'%s\', \'%s\' );' . PHP_EOL, 'WP_LANG', $parsed['lang'] );
+        fprintf( $fp, 'define( \'%s\', \'%s\' );' . PHP_EOL, 'WP_LANG', $lang );
         fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'WP_DEBUG', 'false' );
         if( $secureAdmin ) {
             fprintf( $fp, 'define( \'%s\', %s );' . PHP_EOL, 'FORCE_SSL_ADMIN', 'true' );
@@ -304,7 +306,7 @@ _wpi_debug( 'Moving to path: ' . $parsed['path'] );
 chdir( $parsed['path'] );
 if( !is_readable( 'wp-config.php' ) ) {
     _wpi_create_wp_config( $parsed['dbname'], $parsed['dbuser'],
-        $parsed['dbpass'], $parsed['dbhost'], $parsed['secure'] );
+        $parsed['dbpass'], $parsed['dbhost'], $parsed['secure'], $parsed['lang'] );
 }
 _wpi_debug( 'Running installer' );
 $deprecated = null;
