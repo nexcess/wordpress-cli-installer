@@ -8,7 +8,7 @@ A script to install Wordpress completely from the CLI, which makes automation th
 
 The idea is to have a PHP script that just does what the regular Wordpress installer
 does, but done through the CLI. However, since using PHP's CLI binary is somewhat awkward, you
-can instead use the bash shell script which is generated (using mk-polyglot.sh) and contains
+can instead use the bash shell script which is generated (using update-shell-script.sh) and contains
 the complete PHP script. Thus you can do something like this::
 
     $ curl -s http://wordpress.org/latest.tar.gz | tar xzf -
