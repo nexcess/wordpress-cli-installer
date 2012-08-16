@@ -1,6 +1,4 @@
 <?php
-// Surprise Deprecated and PHP Strict Messages
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
 /**
  * Nexcess.net Wordpress CLI Installer
@@ -24,6 +22,9 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 /**
  * @author Alex Headley <aheadley@nexcess.net>
  */
+
+// Suppress Deprecated and PHP Strict Messages
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
 /**
  * Simple message logging helper
