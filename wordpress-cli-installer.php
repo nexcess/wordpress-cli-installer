@@ -1,4 +1,6 @@
 <?php
+// Surprise Deprecated and PHP Strict Messages
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
 /**
  * Nexcess.net Wordpress CLI Installer
