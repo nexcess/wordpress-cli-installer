@@ -25,6 +25,12 @@
 
 // Suppress Deprecated and PHP Strict Messages
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+// Set SERVER_NAME explicitly otherwise phpmailer fails to
+// determine the hostname to use for the sender email when
+// installing. If we don't do this, it ends up as something
+// like "wordpress@" which fails validation and aborts
+// the installation.
+$_SERVER['SERVER_NAME'] = gethostname();
 
 /**
  * Simple message logging helper

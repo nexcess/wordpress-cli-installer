@@ -13,7 +13,7 @@ else
 fi
 $PHP  -- "$@" <<EOF
 <?php
- error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT); function _wpi_log( \$message ) { printf( '%s %s' . PHP_EOL, @date( 'c' ), trim( \$message, PHP_EOL ) ); } function _wpi_debug( \$message ) { if( _WPI_VERBOSE ) { _wpi_log( 'DEBUG: ' . \$message ); } } function _wpi_die( \$message, \$code = 1 ) { print 'ERROR: ' . rtrim( \$message, PHP_EOL ) . PHP_EOL; exit( \$code ); } function _wpi_usage() { print 'Usage: wordpress-cli-installer.sh [-hPv] -b base-url -e email-address [-p admin-password]
+ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT); \$_SERVER['SERVER_NAME'] = gethostname(); function _wpi_log( \$message ) { printf( '%s %s' . PHP_EOL, @date( 'c' ), trim( \$message, PHP_EOL ) ); } function _wpi_debug( \$message ) { if( _WPI_VERBOSE ) { _wpi_log( 'DEBUG: ' . \$message ); } } function _wpi_die( \$message, \$code = 1 ) { print 'ERROR: ' . rtrim( \$message, PHP_EOL ) . PHP_EOL; exit( \$code ); } function _wpi_usage() { print 'Usage: wordpress-cli-installer.sh [-hPv] -b base-url -e email-address [-p admin-password]
     [-T blog-title] [-u admin-user] [-l lang] [--dbuser=database-user] [--dbpass=database-pass]
     [--dbname=database-name] [--dbhost=database-host] path/to/wp/files/
 
@@ -67,6 +67,7 @@ require_once(ABSPATH . \'wp-settings.php\');' . PHP_EOL ); fclose( \$fp ); } els
 Admin URL: %1\$s
 Username:  %2\$s
 Password:  %3\$s' . PHP_EOL, WP_SITEURL . '/wp-admin/', \$parsed['user'], \$parsed['pass'], WP_SITEURL . '/' ); exit( 128 ); 
+
 EOF
 if [ $? -eq 128 ]; then
     #everything green
