@@ -30,7 +30,11 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 // installing. If we don't do this, it ends up as something
 // like "wordpress@" which fails validation and aborts
 // the installation.
-$_SERVER['SERVER_NAME'] = gethostname();
+if( function_exists( 'gethostname' ) ) {
+    $_SERVER['SERVER_NAME'] = gethostname();
+} else {
+    $_SERVER['SERVER_NAME'] = php_uname('n');
+}
 
 /**
  * Simple message logging helper
