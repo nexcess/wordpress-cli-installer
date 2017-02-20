@@ -13,7 +13,7 @@ else
 fi
 $PHP  -- "$@" <<EOF
 <?php
- error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT); \$_SERVER['SERVER_NAME'] = gethostname(); function _wpi_log( \$message ) { printf( '%s %s' . PHP_EOL, @date( 'c' ), trim( \$message, PHP_EOL ) ); } function _wpi_debug( \$message ) { if( _WPI_VERBOSE ) { _wpi_log( 'DEBUG: ' . \$message ); } } function _wpi_die( \$message, \$code = 1 ) { print 'ERROR: ' . rtrim( \$message, PHP_EOL ) . PHP_EOL; exit( \$code ); } function _wpi_usage() { print 'Usage: wordpress-cli-installer.sh [-hPv] -b base-url -e email-address [-p admin-password]
+ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT); if( function_exists( 'gethostname' ) ) { \$_SERVER['SERVER_NAME'] = gethostname(); } else { \$_SERVER['SERVER_NAME'] = php_uname('n'); } function _wpi_log( \$message ) { printf( '%s %s' . PHP_EOL, @date( 'c' ), trim( \$message, PHP_EOL ) ); } function _wpi_debug( \$message ) { if( _WPI_VERBOSE ) { _wpi_log( 'DEBUG: ' . \$message ); } } function _wpi_die( \$message, \$code = 1 ) { print 'ERROR: ' . rtrim( \$message, PHP_EOL ) . PHP_EOL; exit( \$code ); } function _wpi_usage() { print 'Usage: wordpress-cli-installer.sh [-hPv] -b base-url -e email-address [-p admin-password]
     [-T blog-title] [-u admin-user] [-l lang] [--dbuser=database-user] [--dbpass=database-pass]
     [--dbname=database-name] [--dbhost=database-host] path/to/wp/files/
 
